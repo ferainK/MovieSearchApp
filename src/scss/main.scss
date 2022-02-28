@@ -1,0 +1,12 @@
+// bootstrap default control
+$primary: #FDC000;      //반드시 여기에 입력되어야함.
+
+// bootstrap default module
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/root";
+
+
+// bootstrap module
+@import "../../node_modules/bootstrap/scss/bootstrap.scss"

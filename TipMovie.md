@@ -6,12 +6,13 @@
 $ npm i vue-router@4
 ```
 \- routes 폴더 생성 <br>
-\- routes 폴더 내 About.vue/ Home.vus index.js 파일 생성
+\- routes 폴더 내 index.js / About.vue / Home.vue / Movie.vue 파일 생성
 ```js
 //index.js
 import { createRouter, createWebHashHistory} from 'vue-router'
 import Home from './Home.vue'
 import About from './About.vue'
+import Movie from './Movie.vue'
 
 
 export default createRouter({
@@ -23,6 +24,10 @@ export default createRouter({
         {
             path: '/',         //main page
             component: Home
+        },
+        {
+            path: '/movie',         //moive page
+            component: Movie
         },
         {
             path: '/about',    //about page
@@ -46,8 +51,23 @@ createApp(App)
 ```html
 <!-- App.vue -->
 <template>
-  <RouterView />
+  <Header/>
+  <RouterView/>
 </template>
+
+<script>
+import Header from './components/Header.vue'
+export default {
+  components:{
+    Header,
+  }
+}
+</script>
+
+<style lang="scss">
+  @import "~/scss/main";
+
+</style>
 ```
 
 ## 2) 부트스트랩 사용하기
@@ -60,3 +80,17 @@ $ npm i bootstrap@next
 // main.scss
 @import "../../node_modules/bootstrap/scss/bootstrap.scss"
 ```
+\- default 디자인 변경
+```scss
+//main.scss 가장 앞단
+// bootstrap default control
+$primary: #FDC000;
+
+// bootstrap default module
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/root";
+```
+\- SCSS reset CDN, font CDN, 모든 페이지에 적용할 기본 CSS는 index.html에 반영
+\- `node_modules/bootstrap/scss/__variables.scss`에 기본색상 정보 활용하면 조금 편함

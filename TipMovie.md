@@ -1,6 +1,6 @@
 # Project : Movie Search App
 # 1. 시작하기
-## 1) 환경 설정
+## 1) 환경 설정 (Router)
 \- 페이지 관리 패키지(vue-router) 설치
 ```c
 $ npm i vue-router@4
@@ -9,7 +9,7 @@ $ npm i vue-router@4
 ```c
 $ npm i axios
 ```
-\- 컴포넌트 간 데이터 공유 모듈 (Vuex) 설치
+\- 컴포넌트 간 데이터 공유 모듈 (Vuex) 설치  `[2장 에서 상세설명]`
 ```c
 $ npm i vuex
 ```
@@ -107,17 +107,117 @@ $primary: #FDC000;
 \- SCSS reset CDN, font CDN, 모든 페이지에 적용할 기본 CSS는 index.html에 반영
 \- `node_modules/bootstrap/scss/__variables.scss`에 기본색상 정보 활용하면 조금 편함
 
-## 3) store
+## 3) 비동기
+> 1\. 과거 방법
+> ```js
+> function a(number) {
+>   return new Promise(function(resolve,reject) {
+>     if (number > 4){
+>       reject()
+>     }
+>     setTimeout(function() { 
+>        console.log('A')
+>        resolve()
+>     },1000)
+>   })
+> }
+>
+> function test() {
+>   a(2)
+>     .then(funciton(){console.log('resolve')})
+>     .catch(funciton(){console.log('reject')})
+>     .finally(function(){console.log('finish')})
+> }
+> ```
 
-## 4) 비동기
-예전방법
-Promise 인수 / 호출 매소드
-1. resolve : 이행  => f.then(...)
-2. reject : 거부   => f.catch(...)
-3.                 => f.finally(...)
+> 2\. 현재 방법
+> ```js
+> function a(number) {
+>   return new Promise(function(resolve,reject) {
+>     if (number > 4){
+>       reject()
+>     }
+>     setTimeout(function() { 
+>        console.log('A')
+>        resolve()
+>     },1000)
+>   })
+> }
+>
+> async function test() {
+>   try{
+>     await a(2)
+>     console.log('resolve')
+>   } catch(error){
+>     console.log('reject')
+>   } finally{
+>     console.log('finish')
+>   }
+>
 
-지금 방법
-Promise 인수 / 호출 매소드
-1. resolve : 이행  => async / try{await f}
-2. reject : 거부   =>       / catch(error) {return ...}
-3.                 =>       / finally {}
+## 2. vuex (store)
+### 1) vue 구성
+\- main.js import 추가
+```js
+import Store from '~/store/index.js'
+
+createApp(App)
+    .use(Router)
+    .use(Store) //추가 구문
+    .mount('#app')
+```
+\- src/store 폴더 추가 및 `index.js`, `movie.js`, `about.js` 파일 추가
+\- `index.js` 파일 작성 (Store 기본 정보)
+```js
+import {createStore} from 'vuex'
+import movie from './movie.js'
+import about from './about.js'
+
+export default createStore({
+    modules: {
+        movie,
+        about
+    }
+})
+```
+\- `movie.js` 파일 작성
+```js
+export default {
+  // Vue의 modules
+  namespaced: true,
+
+  // Vue의 data
+  state: (),
+
+  //Vue의 computed
+  getter: {},	
+
+  //Vue의 method
+  //  - state(data) 변이 (동기)
+  mutations: {}
+  //  - state(data) 변이 외 (비동기)
+  actions: {}
+```
+\- `dispatch`를 통한 데이터 저장 `(→ store)`
+```js
+async apply() {
+  //$store : 전역 변수
+  //movie.js 內 searchMovies 'actions' 
+  await this.$store.dispatch('movie/searchMovies', {
+    title: this.title,
+    type: this.type,
+    number: this.number,
+    year: this.year
+  })
+}
+```
+\- 데이터 호출 `(store →)`
+```js
+computed: {
+  movies() {
+    //store에 저장된 state 값
+    //state값의 출처는 movie.movies
+    return this.$store.state.movie.movies
+  }
+}
+```

@@ -13,6 +13,10 @@ $ npm i axios
 ```c
 $ npm i vuex
 ```
+\- 배열 데이터 관리 모듈 (lodash) 설치
+```c
+$ npm i lodash
+```
 \- routes 폴더 생성 <br>
 \- routes 폴더 내 index.js / About.vue / Home.vue / Movie.vue 파일 생성
 ```js

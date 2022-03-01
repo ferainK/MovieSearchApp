@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import MovieItem from '~/components/MoiveItem.vue'
+import MovieItem from '~/components/MovieItem.vue'
 export default {
   components: {
     MovieItem

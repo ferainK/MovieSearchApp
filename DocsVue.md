@@ -417,7 +417,7 @@ Component.vue
 ```html
 <!-- HTML -->
 <div
-  :class="{large: large}" <!--> {large로 단축 표현 가능 -->
+  :class="{large: large}" <!--> large로 단축 표현 가능 -->
   :style="{ backgroundcolor: color }"
   class="btn">
   <slot>기본값</slot>

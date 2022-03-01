@@ -10,20 +10,21 @@
         v-for="filter in filters"
         v-model="$data[filter.name]"
         :key="filter.name">
-        {{filter.name}}
+          {{filter.name}}
         <option
           v-if="filter.name==='year'">
-          All Years
+            All Years
         </option>
         <option
           v-for="item in filter.items"
-          :key="item"
-          @click="apply">
-          {{item}}
+          :key="item">
+            {{item}}
         </option>
       </select>
-      <button class="btn btn-primary">
-        Apply
+      <button 
+        class="btn btn-primary"
+        @click="apply">
+          Apply
       </button>
   </div>
 </template>

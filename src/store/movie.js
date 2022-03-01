@@ -1,4 +1,5 @@
 import axios from 'axios'
+import _uniqBy from 'lodash/uniqBy'
 export default {
   // Vue의 modules
   namespaced: true,		
@@ -22,28 +23,29 @@ export default {
       state.movies = []
     }
   },
+  
   //state(data) 변이 외 (비동기)
   actions: {
-    async searchMovies({state, commit}, payload) {  //context => {commit} //state도 동일
+    async searchMovies({state, commit}, payload) {  //context => {commit, state} //state도 동일
       const {title, type, number, year} = payload
       const OMDB_API_KEY = '7035c60c'
-      const res = await axios.get(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=1`) 
+      let res = await axios.get(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=1`) 
+      const {Search, totalResults } = res.data
       commit('updateState', { //context.commit => commit
-        movies: Search
+        movies: _uniqBy(Search, 'imdbID')
       })
 
-      const {Search, totalResults } = res.data
-      const total = parseInt(totalResults, 10) //int로 데이터 변환 (10진수)
+      const total = parseInt(totalResults, 10) //int로 데이터 변환 (10진수)x`
       const pageLength = Math.ceil(total/10)
       if (pageLength > 1) {
-        for (let page = 2; page <= pageLength; page =+ 1){
-          if (page>number / 10){
+        for (let page = 2; page <= pageLength; page += 1){
+          if (page > number / 10){
             break
           }
-          const res = await axios.get(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`)
+          res = await axios.get(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`)
           const {Search} = res.data
           commit('updateState', {
-            movies: [...state.moives, ...Search]  //... 전개 연산자
+            movies: [...state.movies, ..._uniqBy(Search, 'imdbID')]  //... 전개 연산자
           }) 
         }
       }

@@ -5,6 +5,14 @@
 ```c
 $ npm i vue-router@4
 ```
+\- promise 기반 HTTP client (axios) 설치
+```c
+$ npm i axios
+```
+\- 컴포넌트 간 데이터 공유 모듈 (Vuex) 설치
+```c
+$ npm i vuex
+```
 \- routes 폴더 생성 <br>
 \- routes 폴더 내 index.js / About.vue / Home.vue / Movie.vue 파일 생성
 ```js
@@ -52,7 +60,7 @@ createApp(App)
 <!-- App.vue -->
 <template>
   <Header/>
-  <RouterView/>
+  <RouterView/> <!--routes/index.js에 연동된 내용-->
 </template>
 
 <script>

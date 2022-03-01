@@ -59,7 +59,7 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
-        { from: 'src/img' }
+        { from: 'src/assets' }
       ]
     }),
     new VueLoaderPlugin(),

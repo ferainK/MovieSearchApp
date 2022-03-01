@@ -49,6 +49,20 @@ export default {
           }) 
         }
       }
-    }
+    },
+    //리펙토링
+    
   }
+}
+function _fetchMovies({state, commit}, payload){
+  const {title, type, number, year} = payload
+  const OMDB_API_KEY = '7035c60c'
+  const url = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}` 
+  return new Promise(function(resolve, reject){
+    try{
+      res = axios.get(url)
+    } catch(error){
+      return error
+    }
+  })  
 }

@@ -28,7 +28,7 @@ import Movie from './Movie.vue'
 
 
 export default createRouter({
-    //hash mode vs history mode
+    // hash mode vs history mode
     // hash mode : 별도 작업 없이 없는 페이지 컨트롤 가능
     // history mode : 서버 셋팅 필요
     history: createWebHashHistory(),
@@ -106,3 +106,18 @@ $primary: #FDC000;
 ```
 \- SCSS reset CDN, font CDN, 모든 페이지에 적용할 기본 CSS는 index.html에 반영
 \- `node_modules/bootstrap/scss/__variables.scss`에 기본색상 정보 활용하면 조금 편함
+
+## 3) store
+
+## 4) 비동기
+예전방법
+Promise 인수 / 호출 매소드
+1. resolve : 이행  => f.then(...)
+2. reject : 거부   => f.catch(...)
+3.                 => f.finally(...)
+
+지금 방법
+Promise 인수 / 호출 매소드
+1. resolve : 이행  => async / try{await f}
+2. reject : 거부   =>       / catch(error) {return ...}
+3.                 =>       / finally {}

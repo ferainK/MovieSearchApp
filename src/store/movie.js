@@ -6,7 +6,7 @@ export default {
   // Vue의 data
   state: (() => ({ 
     movies: [],
-    message:'',
+    message:'Search for te moive title!',
     loading: false
   })),
   //Vue의 computed
@@ -27,42 +27,68 @@ export default {
   //state(data) 변이 외 (비동기)
   actions: {
     async searchMovies({state, commit}, payload) {  //context => {commit, state} //state도 동일
-      const {title, type, number, year} = payload
-      const OMDB_API_KEY = '7035c60c'
-      let res = await axios.get(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=1`) 
-      const {Search, totalResults } = res.data
-      commit('updateState', { //context.commit => commit
-        movies: _uniqBy(Search, 'imdbID')
+      //중복실행 방지
+      if (state.loading){
+        return 
+      }
+      //초기화
+      commit('updateState', {
+        movies: [],
+        message: '',
+        loading: true
       })
-
-      const total = parseInt(totalResults, 10) //int로 데이터 변환 (10진수)x`
-      const pageLength = Math.ceil(total/10)
-      if (pageLength > 1) {
-        for (let page = 2; page <= pageLength; page += 1){
-          if (page > number / 10){
+      //실행
+      try{
+        let pageLength = 100
+        let totalSearch = []
+        let pageLimit = 1
+        for (let page = 1; page <= pageLength; page += 1){
+          //db Link
+          let res = await _fetchMovies({
+            ...payload,
+            page
+          })
+          //mutations 실행 (state 저장)        
+          if (page === 1){
+            this.pageLimit = Math.ceil(parseInt(totalResults, 10)/10)
+          } else if (page <= pageLimit|page > payload.number / 10){
+            commit('updateState', { //context.commit => commit
+              movies: [..._uniqBy(totalSearch, 'imdbID')],
+              loading: false
+            })
             break
           }
-          res = await axios.get(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`)
-          const {Search} = res.data
-          commit('updateState', {
-            movies: [...state.movies, ..._uniqBy(Search, 'imdbID')]  //... 전개 연산자
-          }) 
-        }
+          //dataframe화
+          let {Search, totalResults } = res.data
+          totalSearch = [...totalSearch, ...Search]
+        }  
+      } catch(message){
+        commit('updateState',{
+          movies: [],
+          message,
+          loading: false
+        })
       }
     },
     //리펙토링
     
   }
 }
-function _fetchMovies({state, commit}, payload){
-  const {title, type, number, year} = payload
+
+function _fetchMovies(payload){
+  const {title, type, year, page} = payload
   const OMDB_API_KEY = '7035c60c'
   const url = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}` 
   return new Promise(function(resolve, reject){
-    try{
-      res = axios.get(url)
-    } catch(error){
-      return error
-    }
+    axios.get(url)
+      .then(function(res) {
+        if (res.data.Error){
+          reject(res.data.Error)  
+        }
+        resolve(res)
+      })
+      .catch(function(error) {
+        reject(error)
+      })
   })  
 }

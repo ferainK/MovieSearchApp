@@ -1,5 +1,12 @@
 // bootstrap default control
 $primary: #FDC000;      //반드시 여기에 입력되어야함.
+$container-max-widths:(
+  sm: 540px,
+  md: 704px,
+  lg: 924px,
+  xl: 1140px,
+  xxl: 1364px
+);
 
 // bootstrap default module
 @import "../../node_modules/bootstrap/scss/functions";

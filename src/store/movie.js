@@ -34,6 +34,7 @@ export default {
       //초기화
       commit('updateState', {
         movies: [],
+        movieInfo: {},
         message: '',
         loading: true
       })
@@ -70,16 +71,39 @@ export default {
         })
       }
     },
-    //리펙토링
+
+    async searchMovieWithId({state, commit}, payload) {
+      if (state.loading) return
+      commit('updateState', {
+        movieInfo: {},
+        loading: true
+      })
+
+      try{
+        const res = await _fetchMovies(payload)
+        commit('updateState'), {
+          movieInfo: res.data,
+          loading: false
+        }
+      } catch(error){
+        commit('updateState',{
+          movieInfo: {},
+          loading: false
+        })
+
+      }
+    }
     
   }
 }
 
 function _fetchMovies(payload){
-  const {title, type, year, page} = payload
+  const {title, type, year, page, id} = payload
   const OMDB_API_KEY = '7035c60c'
-  const url = `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}` 
-  return new Promise(function(resolve, reject){
+  const url = id
+    ? `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}` 
+    : `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}` 
+    return new Promise(function(resolve, reject){
     axios.get(url)
       .then(function(res) {
         if (res.data.Error){

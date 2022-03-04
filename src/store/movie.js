@@ -3,14 +3,18 @@ import _uniqBy from 'lodash/uniqBy'
 export default {
   // Vue의 modules
   namespaced: true,		
+
   // Vue의 data
   state: (() => ({ 
     movies: [],
     message:'Search for te moive title!',
-    loading: false
+    loading: false,
+    movieInfo: {},
   })),
+
   //Vue의 computed
   getter: {},	
+
   //Vue의 method
   //state(data) 변이
   mutations: {
@@ -34,7 +38,6 @@ export default {
       //초기화
       commit('updateState', {
         movies: [],
-        movieInfo: {},
         message: '',
         loading: true
       })
@@ -78,19 +81,19 @@ export default {
         movieInfo: {},
         loading: true
       })
-
+  
       try{
-        const res = await _fetchMovies(payload)
-        commit('updateState'), {
+        let res = await _fetchMovies(payload)
+        commit('updateState', {
           movieInfo: res.data,
           loading: false
-        }
-      } catch(error){
+        })
+      } catch(message){
         commit('updateState',{
           movieInfo: {},
+          message,
           loading: false
         })
-
       }
     }
     

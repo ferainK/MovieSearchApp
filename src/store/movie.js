@@ -1,5 +1,8 @@
 import axios from 'axios'
 import _uniqBy from 'lodash/uniqBy'
+
+const _defaultMessage = 'Search for te moive title!'
+
 export default {
   // Vue의 modules
   namespaced: true,		
@@ -7,7 +10,7 @@ export default {
   // Vue의 data
   state: (() => ({ 
     movies: [],
-    message:'Search for te moive title!',
+    message:_defaultMessage,
     loading: false,
     movieInfo: {},
   })),
@@ -25,6 +28,8 @@ export default {
     },
     resetMovies(state) {
       state.movies = []
+      state.message = _defaultMessage
+      state.loading = false
     }
   },
   

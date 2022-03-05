@@ -22,27 +22,23 @@
 <script>
 import MovieItem from '~/components/MovieItem.vue'
 import Loader from '~/components/Loader.vue'
+import { mapState } from 'vuex'
 export default {
   components: {
     MovieItem,
     Loader
   },
   computed: {
-    movies() {
-      return this.$store.state.movie.movies
-    },
-    message() {
-      return this.$store.state.movie.message
-    },
-    loading() {
-      return this.$store.state.movie.loading
-    }
+    ...mapState('movie', [
+      'movies',
+      'message',
+      'loading'
+    ])
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  @import "~/scss/main.scss";
   .container{
     margin-top: 30px;
     .inner{

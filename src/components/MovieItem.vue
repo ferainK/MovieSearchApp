@@ -1,7 +1,13 @@
 <template>
-  <div
+  <RouterLink
+    :to="`/movie/${movie.imdbID}`"
     class="movie"
     :style="{ backgroundImage: `url(${movie.Poster})`}" >
+    <Loader
+      class="loader"
+      v-if="imageLoading"
+      :size="1.5"
+      absolute/>
     <div class="info">
       <div class="year">
         {{movie.Year}}
@@ -10,22 +16,45 @@
         {{movie.Title}}
       </div>
     </div>
-  </div>
+  </RouterLink>
 </template>
 
 <script>
+import Loader from '~/components/Loader.vue'
 export default {
+  components: {
+    Loader
+  },
   props: {
     movie: {
       type: Object,
       default: () => ({})
+    }
+  },
+  data() {
+    return{
+      imageLoading: true
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    async init(){
+      const poster = this.movie.Poster
+      if (!poster || poster === 'N/A') {
+        this.imageLoading = false
+      } else{
+        await this.$loadImage(poster)
+        this.imageLoading = false
+      }
+      
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  @import "~/scss/main.scss";
   .movie{
     $width: 168px;
     width: $width;

@@ -108,7 +108,7 @@ $primary: #FDC000;
 \- `node_modules/bootstrap/scss/__variables.scss`에 기본색상 정보 활용하면 조금 편함
 
 ## 3) 비동기
-> 1\. 과거 방법
+> 1\. 과거 방법 : a(2)가 실행시키고 '실행중'이 표시됨, then/catch는 나중에 실행 
 > ```js
 > function a(number) {
 >   return new Promise(function(resolve,reject) {
@@ -127,10 +127,11 @@ $primary: #FDC000;
 >     .then(funciton(){console.log('resolve')})
 >     .catch(funciton(){console.log('reject')})
 >     .finally(function(){console.log('finish')})
+>   console.log('실행중')
 > }
 > ```
 
-> 2\. 현재 방법
+> 2\. 현재 방법 : await 명령어에 따라 a(2)가 완료될 때까지 일시정지
 > ```js
 > function a(number) {
 >   return new Promise(function(resolve,reject) {
@@ -153,6 +154,7 @@ $primary: #FDC000;
 >   } finally{
 >     console.log('finish')
 >   }
+>   console.log('완료')
 >
 
 ## 2. vuex (store)

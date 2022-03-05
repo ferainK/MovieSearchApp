@@ -19,8 +19,12 @@
     </template>
     <div v-else class="movie-details">
       <div
-        :style="{backgroundImage: `url(${movieInfo.Poster})`}"
-         class="poster"></div>
+        :style="{backgroundImage: `url(${requestDiffSizeImage(movieInfo.Poster,700)})`}"
+         class="poster">
+        <Loader
+          v-if="imageLoading"
+          absolute />
+      </div>
       <div class="specs">
         <div class="title">
           {{movieInfo.Title}}
@@ -35,6 +39,16 @@
         </div>
         <div class="ratings">
           <h3>Ratings</h3>
+          <div class="rating-wrap">
+            <div 
+              v-for="{Source, Value} in movieInfo.Ratings"
+              :key="Source"
+              :title="Source"
+              class="rating">
+              <img :src="require(`assets/${Source}.png`).default" :alt="Source">
+              <span>{{ Value }}</span>
+            </div>
+          </div>
         </div>
         <div>
           <h3>Actors</h3>
@@ -58,30 +72,48 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Loader from '~/components/Loader.vue'
 export default {
   components: {
     Loader
   },
-  computed:{
-    movieInfo(){
-      console.log(this.$store.state.movie.movieInfo)
-      return this.$store.state.movie.movieInfo
-    },
-    loading() {
-      return this.$store.state.movie.loading
+  data() {
+    return{
+      imageLoading: true
     }
+  },
+  computed:{
+    ...mapState('movie', [
+      'movieInfo',
+      'loading'
+    ])
   },
   created(){
     this.$store.dispatch('movie/searchMovieWithId',{
       id: this.$route.params.id
     })
+  },
+  methods:{
+    requestDiffSizeImage(url, size = 700) {
+      if (!url || url === 'N/A') {
+        this.imageLoading = false
+        return 'No image'
+      }
+      const src = url.replace('SX300', `SX${size}`)
+      //await 대신 then을 사용해서 비동기 처리함 (비동기를 동기로 처리)
+      this.$loadImage(src)
+        .then(() => {
+          this.imageLoading = false
+        })
+      return src
+
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  @import "~/scss/main.scss";
   .container{
     padding-top: 40px;
   }
@@ -127,6 +159,7 @@ export default {
     display: flex;
     color: $gray-600;
     .poster{
+      position: relative;
       flex-shrink: 0;
       width: 500px;
       height: 500px * 3 / 2;
@@ -161,13 +194,65 @@ export default {
         margin-top: 20px
       }
       .ratings{
+        .rating-wrap{
+          display: flex;
+          .rating{
+            display: flex;
+              align-items: center;
+              margin-right: 32px;
+            img{
+              height: 30px;
+              flex-shrink: 0;
+              margin-right: 6px;
 
+            }
+          }
+        }
       }
-      .h3{
+      h3{
         margin: 24px 0 6px;
         color: $black;
         font-family: "Oswald", sans-serif;
         font-size: 20px;
+      }
+    }
+
+    @include media-breakpoint-down(xl){
+      .poster {
+        width: 300px;
+        height: 300px * 3 / 2;
+        margin-right: 40px;
+      }
+      .specs{
+        h3{
+          margin: 12px 0 3px;
+        }
+      }
+    }
+    @include media-breakpoint-down(lg){
+      display: block;
+      .poster{
+        margin: 0 auto 40px;
+      }
+      .specs{
+        h3{
+          margin: 24px 0 6px;
+        }
+      }
+      
+    }
+    @include media-breakpoint-down(md){      
+      .specs{
+        .title{
+          font-size: 50px
+        }
+        .rating-wrap{
+          display: block;
+          .rating{
+            margin-top: 10px;
+          }
+
+        }
       }
     }
   }

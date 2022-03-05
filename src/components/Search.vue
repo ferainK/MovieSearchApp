@@ -5,27 +5,31 @@
       v-model="title" 
       type="text" 
       placeholder="Search for Movies, Series, and more"
-      @keyup.enter="apply"/> 
-     <select class="form-select"
-        v-for="filter in filters"
-        v-model="$data[filter.name]"
-        :key="filter.name">
-          {{filter.name}}
-        <option
-          v-if="filter.name==='year'">
-            All Years
-        </option>
-        <option
-          v-for="item in filter.items"
-          :key="item">
-            {{item}}
-        </option>
+      @keyup.enter="apply"/>
+
+    <div class="selects">
+      <select class="form-select"
+      v-for="filter in filters"
+      v-model="$data[filter.name]"
+      :key="filter.name">
+        {{filter.name}}
+      <option
+        v-if="filter.name==='year'">
+          All Years
+      </option>
+      <option
+        v-for="item in filter.items"
+        :key="item">
+          {{item}}
+      </option>
       </select>
-      <button 
-        class="btn btn-primary"
-        @click="apply">
-          Apply
-      </button>
+    </div>
+    
+    <button 
+      class="btn btn-primary"
+      @click="apply">
+        Apply
+    </button>
   </div>
 </template>
 
@@ -79,26 +83,51 @@ export default {
 .container{
   display: flex;
   font-size: 15px;
-  >*{
+
+  input{
     margin-right: 10px;
-    &:last-child{
-      margin-right: 0;
-    }
   }
-  select{
-    width: 120px; 
-    color: $gray-600;
-    flex-shrink: 0;   //css 적용 우선순위 (0순위)
-    option{
-      font-size: 14px;
+
+  .selects{
+    display: flex;
+    select{
+      margin-right: 10px;
+      width: 120px; 
       color: $gray-600;
+      option{
+        font-size: 14px;
+        color: $gray-600;
+      }
     }
   }
+  
   button{
     width: 120px;
     height: 50px;
     font-weight: 700;
     flex-shrink: 0;
+  }
+
+  @include media-breakpoint-down(lg) {
+    display: block;
+    input{
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+    .selects{
+      margin-bottom: 10px;
+      select{
+        &:last-child{
+          margin-right: 0;
+        }
+        width: 100%;
+      }
+    }
+    button{
+      width: 100%;
+      height: 40px;
+    }
   }
 }
 

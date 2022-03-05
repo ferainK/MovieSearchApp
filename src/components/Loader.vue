@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="spinner-border text-primary"
+    class="text-primary spinner-border"
     :class="{absolute, fixed}"
     :style="{
       width: `${size}rem`,
@@ -33,6 +33,7 @@ export default {
 
 <style lang="scss" scoped>
 .spinner-border{
+  color: $primary;
   margin: auto;
   top: 0;
   bottom: 0;

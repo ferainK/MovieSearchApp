@@ -2,7 +2,7 @@ const path = require('path')
 const HtmlPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const {VueLoaderPlugin} = require('vue-loader')
-const dotenv = require('dotenv-webpack')
+const Dotenv = require('dotenv-webpack')
 
 //Surface proX ARM Processor에서 발생하는 경고 문구
 const webpack = require('webpack');

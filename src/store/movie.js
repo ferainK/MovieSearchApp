@@ -71,10 +71,10 @@ export default {
           let {Search, totalResults } = res.data
           totalSearch = [...totalSearch, ...Search]
         }  
-      } catch(message){
+      } catch(error){   //서버리스의 경우, 서버통신이라 객체 형태로 받음
         commit('updateState',{
           movies: [],
-          message,
+          message: error.message,
           loading: false
         })
       }
@@ -105,22 +105,25 @@ export default {
   }
 }
 
-function _fetchMovies(payload){
-  const {title, type, year, page, id} = payload
-  const OMDB_API_KEY = '7035c60c'
-  const url = id
-    ? `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}` 
-    : `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}` 
-    return new Promise(function(resolve, reject){
-    axios.get(url)
-      .then(function(res) {
-        if (res.data.Error){
-          reject(res.data.Error)  
-        }
-        resolve(res)
-      })
-      .catch(function(error) {
-        reject(error)
-      })
-  })  
+async function _fetchMovies(payload){
+  return await axios.post('/.netlify/functions/movie.js', payload)
 }
+// function _fetchMovies(payload){
+//   const {title, type, year, page, id} = payload
+//   const OMDB_API_KEY = '7035c60c'
+//   const url = id
+//     ? `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}` 
+//     : `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}` 
+//     return new Promise(function(resolve, reject){
+//     axios.get(url)
+//       .then(function(res) {
+//         if (res.data.Error){
+//           reject(res.data.Error)  
+//         }
+//         resolve(res)
+//       })
+//       .catch(function(error) {
+//         reject(error)
+//       })
+//   })  
+// }

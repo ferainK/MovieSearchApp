@@ -2,6 +2,7 @@ const path = require('path')
 const HtmlPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const {VueLoaderPlugin} = require('vue-loader')
+const dotenv = require('dotenv-webpack')
 
 //Surface proX ARM Processor에서 발생하는 경고 문구
 const webpack = require('webpack');
@@ -73,11 +74,12 @@ module.exports = {
       __VUE_OPTIONS_API__: true,      //default: true
       __VUE_PROD_DEVTOOLS__: false,   //default: false
     }),
+    new Dotenv()
   ],
 
   devServer: {
     host: 'localhost',
-    port: 8080,
+    port: 8079,
     hot: true,
   },
 }

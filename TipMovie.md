@@ -223,3 +223,15 @@ computed: {
   }
 }
 ```
+
+## 3. Netligy CLI (서버리스)
+### 1) npm
+```c
+$ npm i -D netlify-cli
+$ npm i netlify-cli -g
+```
+
+## 4. 서버 환경변수
+```c
+$ npm i -D dotenv-webpack
+```

@@ -235,3 +235,25 @@ $ npm i netlify-cli -g
 ```c
 $ npm i -D dotenv-webpack
 ```
+
+## 5. 단위 검증, E2E 검증
+```c
+$ npm i -D jest 
+$ npm i -D @vue/test-utils@next 
+$ npm i -D vue-jest@next 
+$ npm i -D babel-jest
+```
+### 1) jext
+- test 방법
+  - afterAll / beforeAll(callback) : 모든 테스트가 시작하기 전/후에 한번만 수행함
+  - afterEach / beforeEach(callback) : 각각의 테스트가 시작하기 전/후에 수행함
+  - describe('그룹 이름', callback) : 그룹화
+  - test('테스트 이름', callback, wait time:5000) : 테스트 수행 (함수 결과를 5초까지만 대기)
+- test 조건
+  - expect() : 테스트 대상 (함수의 결과값)
+  - toBe() : 예상되는 결과 (참조형(객체, 배열 등)은 비교 불가)
+  - toEqual() : 예상되는 결과 (참조형(객체, 배열 등)은 비교 가능)
+  - not : expect와 toBe/toEqual이 다르면 true
+  - resolves : 비동기
+  - rejects : 비동기
+

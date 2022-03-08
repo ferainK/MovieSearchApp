@@ -249,11 +249,124 @@ $ npm i -D babel-jest
   - afterEach / beforeEach(callback) : 각각의 테스트가 시작하기 전/후에 수행함
   - describe('그룹 이름', callback) : 그룹화
   - test('테스트 이름', callback, wait time:5000) : 테스트 수행 (함수 결과를 5초까지만 대기)
-- test 조건
+- callback (test 조건)
   - expect() : 테스트 대상 (함수의 결과값)
   - toBe() : 예상되는 결과 (참조형(객체, 배열 등)은 비교 불가)
   - toEqual() : 예상되는 결과 (참조형(객체, 배열 등)은 비교 가능)
-  - not : expect와 toBe/toEqual이 다르면 true
-  - resolves : 비동기
-  - rejects : 비동기
+  - toContain() : 예상되는 결과 중 포함되는지 여부
+  - not : expect와 toBe/toEqual이 다르면 true (expect 뒤에 사용)
+  - resolves : 비동기(expect 뒤에 사용)
+  - rejects : 비동기(expect 뒤에 사용)
+- 부가 기능
+  - 모의 함수 (Mocking) : 외부 요인은 고려하지 않기 위해 사용됨
 
+    ```js
+    test('test', () => {
+      //모의함수 (fetchMovieTitile 함수에서 사용되는 axios.get 함수를 아래의 콜백함수로 변경)
+      axios.get = jest.fn(() => {
+        return new Promise(resolve => {
+          resolve({
+            data:{
+              Title: 'Frozen II'
+            }
+          })
+        })
+      })
+      //테스트 내용
+      return expect(fetchMovieTitle()).resolves.toBe('Frozen ii')
+    },7000)
+    ```
+- mount(외부 모듈, 옵션)  // shallowMout : 연결되어 있는 하위 모듈들은 랜더링하지 않음
+  - 기본 형태 (비동기 처리 예제)
+    ```js
+    import {mount} from '@vue/test-utils'
+    import Example from './Example.vue'
+
+    test('메시지를 변경합니다.', async () => {
+        const wrapper = mount(Example)
+        //wrapper.vm. === this.
+        expect(wrapper.vm.msg).toBe('Hi')
+        await wrapper.setData({
+            msg: 'Hello? Lee'
+        })
+        expect(wrapper.vm.msg).toBe('Hi')
+        expect(wrapper.find('div').text()).toBe('Hi')
+    })
+    ```
+  - attrs 옵션 : 요소의 속성(class, id 등) 수정
+      ```js
+      const wrapper = mount(Example, {
+        attrs: {
+          id: 'hello',
+          disable: true
+        }
+      })
+      expect(wrapper.attributes()).toEqual({
+        id: 'hello',
+        disable: 'true'
+      })
+      ```
+  - data 옵션 : 내부 변수 (비동기 처리 불가)
+    ```js
+    const wrapper = mount(Example, {
+      data() {
+        return{
+          msg: 'okay'
+        }
+      }
+    })
+    expect(wrapper.html()).toContain('okay')
+    ```
+  - props 옵션 : 외부에서 입력받는 매개변수
+    ```js
+    const wrapper = mount(Example, {
+      props: {
+        count: 5
+      }
+    })
+    expect(wrapper.html()).toContain('5')
+    ```
+  - global.plugins : 
+    ```js
+    import { mount } from '@vue/test-utils'
+    import Example from '~example.js'
+    import myPlugin from '@/plugins/myPlugin.js'
+    
+    test('test', () => {
+      mount(Example, {
+        global: {
+          pluins : [myPlugin]
+        }
+      })
+    })
+    ```
+- wrapper 매소드
+  - attribue
+    ```js
+    // HTML에 id 속성의 이름이 input인지?
+    expect(wrapper.attribute('id')).toEqual('input')
+    ```
+  - find/exists
+    ```js
+    // HTML에 span 속성이 존재하는지?
+    expect(wrapper.find('span').exists()).toBe(true)
+    // HTML에 class="container"가 이 있는지?
+    expect(wrapper.find('[class="container"]').exists()).toBe(true)
+    ```
+  - setData (비동기 처리 가능)
+    ```js
+    // 비동기처리 후 data가 1로 변경되었는지?
+    const wrapper = mount(Example)
+    await wrapper.setData({count: 1})
+    expect(wrapper.html()).toContain('1')
+    ```
+  - unmout
+    ```js
+    //mount가 해제됨 (HTML 랜더링 취소)
+    const wrapper = mount(Example)
+    wrapper.unmount()
+    ```
+  - vm (vue model) : vue의 data 지칭할 떄 사용 (this 와 동일)
+    ```js
+    wrapper.vm.msg
+    ```

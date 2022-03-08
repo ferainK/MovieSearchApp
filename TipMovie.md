@@ -236,7 +236,7 @@ $ npm i netlify-cli -g
 $ npm i -D dotenv-webpack
 ```
 
-## 5. 단위 검증, E2E 검증
+## 5. 단위 검증
 ```c
 $ npm i -D jest 
 $ npm i -D @vue/test-utils@next 
@@ -257,9 +257,10 @@ $ npm i -D babel-jest
   - not : expect와 toBe/toEqual이 다르면 true (expect 뒤에 사용)
   - resolves : 비동기(expect 뒤에 사용)
   - rejects : 비동기(expect 뒤에 사용)
-- 부가 기능
-  - 모의 함수 (Mocking) : 외부 요인은 고려하지 않기 위해 사용됨
-
+- 모의 함수 (Mocking) : 외부 요인은 고려하지 않기 위해 사용됨 (jest.fn)
+  - .mockReturnValue('xxx') : 임의 리턴값 생성
+  - .mockResolvedValue('xxx') : 임의 비동기 완료값 생성
+  - .mockRejectedValue(new Error('xxx')) : 임의 비동기 거부값 생성
     ```js
     test('test', () => {
       //모의함수 (fetchMovieTitile 함수에서 사용되는 axios.get 함수를 아래의 콜백함수로 변경)
@@ -370,3 +371,18 @@ $ npm i -D babel-jest
     ```js
     wrapper.vm.msg
     ```
+- vue 전용 기능
+  - routerlink 컨트롤
+    ```js
+    //기본 메인페이지가 아닌 다른 페이지에서 단위검증을 수행할 때,
+    import router from ''
+    router.push('/movie/tt1234567')
+    await router.isReady()
+    ```
+
+## 6. E2E 검증
+```c
+$ npm i -D cypress
+$ npm i -D eslint-plugin-cypress
+```
+
